@@ -58,13 +58,13 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
         gcatch(EXCEPTION, 1)
 
  #define gcatch(EXCEPTION, GUARD) \
-        ccatch(rocketcrash_context->exception == EXCEPTION && GUARD)
+        ccatch(rocketcrash_context->exception == EXCEPTION && (GUARD))
 
 #define ccatch(EXPR) \
         } else if (!(   rocketcrash_context->status \
                       & rocketcrash_UNSCOPED \
                    ) \
-                   && EXPR \
+                   && (EXPR) \
         ) { \
             rocketcrash_context->status |= \
                 rocketcrash_CAUGHT;
