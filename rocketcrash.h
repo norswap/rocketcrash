@@ -37,12 +37,27 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
 /* UNSCOPED  : the exception occured outside of a try clause */
 /* FINALIZED : the finalize clause of the try statement has been entered */
 
-#define try \
-    { \
+#if defined __GNUC__
+#define shadowcode_ \
+        _Pragma("GCC diagnostic push") \
+        _Pragma("GCC diagnostic ignored \"-Wshadow\"") \
         struct rocketcrash_Context * \
             rocketcrash_old_context; \
         struct rocketcrash_Context * \
             rocketcrash_tmp_context; \
+        _Pragma("GCC diagnostic pop")
+#else /* #if defined __clang__ || defined _MSC_VER || ... */
+#define shadowcode_ \
+        /* TODO: disable warning */ \
+        struct rocketcrash_Context * \
+            rocketcrash_old_context; \
+        struct rocketcrash_Context * \
+            rocketcrash_tmp_context;
+#endif
+
+#define try \
+    { \
+shadowcode_ \
 \
         rocketcrash_old_context = rocketcrash_context; \
 \
