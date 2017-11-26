@@ -42,7 +42,7 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
         struct rocketcrash_Context * \
             rocketcrash_old_context; \
         struct rocketcrash_Context * \
-            rocketcrash_tmp_context = \
+            rocketcrash_tmp_context; \
 \
         rocketcrash_old_context = rocketcrash_context; \
 \
