@@ -27,11 +27,11 @@ static void reset(void)
     after_finally   = 0;
 }
 
-char *foo = "foo";
-char *bar = "bar";
+char const * const foo = "foo";
+char const * const bar = "bar";
 
 /* can be used as an expression that throws bar and returns foo */
-static char * whoops(void)
+static char const * whoops(void)
 {
     throw(bar);
     return foo;
