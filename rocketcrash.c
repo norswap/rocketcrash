@@ -4,7 +4,7 @@
 
 rocketcrash_thread_local struct rocketcrash_Context * rocketcrash_context = NULL;
 
-void throw2(char const * const exception, void * const info)
+void throw2(char const * const exception, void const * const info)
 {
     if (rocketcrash_context == NULL) {
         fprintf(stderr, "Uncaught exception: %s\n", exception);

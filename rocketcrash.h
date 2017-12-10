@@ -22,7 +22,7 @@ struct rocketcrash_Context
     jmp_buf env;
     char const * exception;
     int status;
-    void *info;
+    void const * info;
 };
 
 extern rocketcrash_thread_local struct rocketcrash_Context *
@@ -122,6 +122,6 @@ shadowcode_ \
 #define exception_info (rocketcrash_context->info)
 
 #define throw(EXCEPTION) throw2(EXCEPTION, NULL)
-void throw2(char const * const exception, void * const info);
+void throw2(char const * const exception, void const * const info);
 
 #endif
