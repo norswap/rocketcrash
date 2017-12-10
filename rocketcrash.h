@@ -107,6 +107,16 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
 #define exception_info (rocketcrash_context->info)
 
 #define throw(EXCEPTION) throw2(EXCEPTION, NULL)
-void throw2(char const * const exception, void const * const info);
+
+#if !defined ___STD_VERSION__ || __STDC_VERSION__ < 201112L /* not c11 */
+#if defined __GNUC__
+#define _Noreturn __attribute__ ((__noreturn__))
+#else /* #if defined __clang__ || defined _MSC_VER || ... */
+/* TODO: define "_Noreturn" */
+#define _Noreturn
+#endif
+#endif
+
+_Noreturn void throw2(char const * const exception, void const * const info);
 
 #endif
