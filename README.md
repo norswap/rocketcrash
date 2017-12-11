@@ -57,6 +57,13 @@ You can also build and run the tests:
     make testc11
     nmake test
 
+If you want to compile/test with a long list of debug-flags enabled
+(presently only with recent versions of GNU Make and GCC) do:
+
+    make DEBUG=1 c90
+    make DEBUG=1 c99
+    make DEBUG=1 c11
+
 ## Basic Use
 
 A `try` statement looks like this:

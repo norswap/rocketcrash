@@ -22,7 +22,7 @@ struct rocketcrash_Context
     jmp_buf env;
     char const * exception;
     int status;
-    void *info;
+    void const * info;
 };
 
 extern rocketcrash_thread_local struct rocketcrash_Context *
@@ -37,12 +37,27 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
 /* UNSCOPED  : the exception occured outside of a try clause */
 /* FINALIZED : the finalize clause of the try statement has been entered */
 
-#define try \
-    { \
+#if defined __GNUC__
+#define shadowcode_ \
+        _Pragma("GCC diagnostic push") \
+        _Pragma("GCC diagnostic ignored \"-Wshadow\"") \
         struct rocketcrash_Context * \
             rocketcrash_old_context; \
         struct rocketcrash_Context * \
-            rocketcrash_tmp_context = \
+            rocketcrash_tmp_context; \
+        _Pragma("GCC diagnostic pop")
+#else /* #if defined __clang__ || defined _MSC_VER || ... */
+#define shadowcode_ \
+        /* TODO: disable warning */ \
+        struct rocketcrash_Context * \
+            rocketcrash_old_context; \
+        struct rocketcrash_Context * \
+            rocketcrash_tmp_context;
+#endif
+
+#define try \
+    { \
+shadowcode_ \
 \
         rocketcrash_old_context = rocketcrash_context; \
 \
@@ -58,13 +73,13 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
         gcatch(EXCEPTION, 1)
 
  #define gcatch(EXCEPTION, GUARD) \
-        ccatch(rocketcrash_context->exception == EXCEPTION && GUARD)
+        ccatch(rocketcrash_context->exception == EXCEPTION && (GUARD))
 
 #define ccatch(EXPR) \
         } else if (!(   rocketcrash_context->status \
                       & rocketcrash_UNSCOPED \
                    ) \
-                   && EXPR \
+                   && (EXPR) \
         ) { \
             rocketcrash_context->status |= \
                 rocketcrash_CAUGHT;
@@ -107,6 +122,16 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
 #define exception_info (rocketcrash_context->info)
 
 #define throw(EXCEPTION) throw2(EXCEPTION, NULL)
-void throw2(char const * const exception, void * const info);
+
+#if !defined ___STD_VERSION__ || __STDC_VERSION__ < 201112L /* not c11 */
+#if defined __GNUC__
+#define _Noreturn __attribute__ ((__noreturn__))
+#else /* #if defined __clang__ || defined _MSC_VER || ... */
+/* TODO: define "_Noreturn" */
+#define _Noreturn
+#endif
+#endif
+
+_Noreturn void throw2(char const * const exception, void const * const info);
 
 #endif
