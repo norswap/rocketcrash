@@ -9,7 +9,7 @@ ms:
 	cl /nologo /c /Wall /wd4710 /wd4820 rocketcrash.c
 
 test: ms
-	cl /nologo /Wall /wd4456 /wd4710 /wd4820 test.c rocketcrash.obj
+	cl /nologo /Wall /wd4456 /wd4702 /wd4710 /wd4820 test.c rocketcrash.obj
 	test.exe
 	rm test.exe
 

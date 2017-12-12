@@ -5,6 +5,8 @@
 
 /******************************************************************************/
 
+/* rocketcrash_thread_local */
+
 #if defined ___STD_VERSION__ && __STDC_VERSION__ >= 201112L /* c11 */
     #define rocketcrash_thread_local _Thread_local
 #elif defined __GNUC__ /* gcc */
@@ -13,6 +15,18 @@
     #define rocketcrash_thread_local __declspec(thread)
 #else /* give up, single thread only */
     #define rocketcrash_thread_local
+#endif
+
+/* rocketcrash_noreturn */
+
+#if defined ___STD_VERSION__ && __STDC_VERSION__ >= 201112L /* c11 */
+    #define rocketcrash_noreturn _Noreturn
+#elif defined __GNUC__
+    #define rocketcrash_noreturn __attribute__ ((__noreturn__))
+#elif defined _MSC_VER /* microsoft c compiler */
+    #define rocketcrash_noreturn __declspec(noreturn)
+#else /* give up, no compiler hint */
+    #define rocketcrash_noreturn
 #endif
 
 /******************************************************************************/
@@ -108,15 +122,6 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
 
 #define throw(EXCEPTION) throw2(EXCEPTION, NULL)
 
-#if !defined ___STD_VERSION__ || __STDC_VERSION__ < 201112L /* not c11 */
-#if defined __GNUC__
-#define _Noreturn __attribute__ ((__noreturn__))
-#else /* #if defined __clang__ || defined _MSC_VER || ... */
-/* TODO: define "_Noreturn" */
-#define _Noreturn
-#endif
-#endif
-
-_Noreturn void throw2(char const * const exception, void const * const info);
+rocketcrash_noreturn void throw2(char const * const exception, void const * const info);
 
 #endif
