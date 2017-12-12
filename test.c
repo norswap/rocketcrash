@@ -179,6 +179,40 @@ static void test06(void)
         && !after_finally);
 }
 
+/* gcatch, complex expression (return val of assignment) */
+static void test07(void)
+{
+    int x = 1;
+
+    reset();
+
+    try {
+        throw(foo);
+    }
+    gcatch(foo, x = 0 ? 0 : 1) {
+        caught = 1;
+    } endtry
+
+    assert(caught);
+}
+
+/* ccatch, complex expression (return val of assignment) */
+static void test08(void)
+{
+    int x = 1;
+
+    reset();
+
+    try {
+      throw(foo);
+    }
+    ccatch(x = 0 ? 0 : 1) {
+        caught = 1;
+    } endtry
+
+    assert(caught);
+}
+
 int main(void)
 {
     test01(); printf("1"); fflush(stdout);
@@ -187,6 +221,8 @@ int main(void)
     test04(); printf("4"); fflush(stdout);
     test05(); printf("5"); fflush(stdout);
     test06(); printf("6"); fflush(stdout);
+    test07(); printf("7"); fflush(stdout);
+    test08(); printf("8"); fflush(stdout);
     printf("\nRocket Crash: All tests passed.\n");
     return EXIT_SUCCESS;
 }
