@@ -160,7 +160,7 @@ static void test06(void)
             throw(foo);
         }
         catch (bar) {
-            bar_caught = 0;
+            bar_caught = 1;
         }
         finally {
             finally_done = 1;
