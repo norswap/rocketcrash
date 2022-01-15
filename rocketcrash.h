@@ -106,8 +106,8 @@ extern rocketcrash_thread_local struct rocketcrash_Context *
             rocketcrash_context = \
                 rocketcrash_old_context; \
 \
-            if (   rocketcrash_status \
-                 & rocketcrash_THROWN \
+            if ((  rocketcrash_status \
+                 & rocketcrash_THROWN  ) \
 \
                 && (  rocketcrash_status \
                      & rocketcrash_CAUGHT \
